@@ -1,0 +1,50 @@
+OBJECTS = $(subst .cpp,.o,$(SOURCES))
+
+INCLUDE += -I/usr/include
+LIB += -lboost_system -lpthread
+
+
+CXX_FLAGS += -O3
+	#-O3 -DBOOST_ASIO_ENABLE_HANDLER_TRACKING -std=c++0x -fvisibility=hidden
+
+GCC_PREFIX=#mips64-linux-gnu-
+CC=$(GCC_PREFIX)gcc
+CLANGPP=/home/master/clang/clang+llvm-3.5.1-x86_64-fedora20/bin/clang++ -target mips
+LLVM_LINK=/home/master/clang/clang+llvm-3.5.1-x86_64-fedora20/bin/llvm-link
+CXX=$(GCC_PREFIX)g++
+AR=$(GCC_PREFIX)ar
+AS=$(GCC_PREFIX)as
+LD=$(GCC_PREFIX)ld
+NM=$(GCC_PREFIX)nm
+RANLIB=$(GCC_PREFIX)ranlib
+STRIP=$(GCC_PREFIX)strip
+OBJCOPY=$(GCC_PREFIX)objcopy
+OBJDUMP=$(GCC_PREFIX)objdump
+READELF=$(GCC_PREFIX)readelf
+
+
+all: $(TARGET)
+
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXX_FLAGS) -o $@ $^ $(LIB)
+	$(STRIP) $@
+
+$(OBJECTS): %.o: %.cpp
+	 $(CXX) $(CXX_FLAGS) -c $^ -o $@ $(INCLUDE)
+
+# prepare build dir & clean
+init:
+ifneq (build, $(wildcard build))
+		mkdir -p build
+endif
+
+clean:
+ifeq ($(TARGET), $(wildcard $(TARGET)))
+	rm -f $(TARGET)
+	rm -f $(OBJECTS)
+endif
+ifeq (build, $(wildcard build))
+	rm -rf build
+endif
+

@@ -1,0 +1,47 @@
+Q1. 
+    How to create my own http server?
+A1.
+    There are many ways to create an http server.
+    1. create http server using port number.
+
+    1a. call explicit server(const unsigned int tcp_port = 0)
+    1b. default scheduler, a single service scheduler will be used - single io_service and multiple threads. 
+
+    2. create http server using http endpoint.
+
+    2a. call explicit server(const boost::asio::ip::tcp::endpoint& endpoint)
+    2b. default scheduler, a single service scheduler will be used - single io_service and multiple threads. 
+    
+    3. create http server using scheduler and port number.
+
+    3a. call explicit server(scheduler& sched, const unsigned int tcp_port = 0)
+    3b. user specified scheduler will be used. 
+
+    4. create http server using scheduler and http endpoint.
+
+    4a. call server(scheduler& sched, const boost::asio::ip::tcp::endpoint& endpoint)
+    4b. user specified scheduler will be used. 
+    
+Q2. 
+    How to share a single io_service scheduler or io_service with other tasks?
+
+A2. 
+    Depends on how to create the http server.
+    1. http server is created with default single service scheduler.
+    
+    1a. change the access specifier from protected => public -- not recommended.
+        inline boost::asio::io_service& get_io_service(void) { return m_active_scheduler.get_io_service(); }
+    1b. create my http server class that publicly inheritent the http server class,
+        and create a public member function that returns the io_service, 
+        and delegate to pion::tcp::server::get_io_service().
+    
+    2. http server is create with a user specified single service scheduler.
+    
+    2a. call to pion::scheduler::get_io_service(), which is a public member, to directly get the io_service.
+        the scheduler instance is a noncopyable public variable, which must be encapsulated with a Locator object/function.
+    
+    3. other cases is not under discussion.
+
+    Therefore, case 2. is recommended.
+
+

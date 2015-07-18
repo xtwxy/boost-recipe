@@ -1,0 +1,64 @@
+Q1.
+    What is plugin?
+
+A1.
+    the class plugin is a class that models a shared object file, .so or .dll
+    where a plugin service is packaged/contained.
+    
+    plugins are reference counted. if no reference, the corresponding shared
+    object, .so/.dll will be unloaded.
+    
+    the constructors of class plugin is protected, which means you cannot create
+    new instance by calling new operator. to create new instance of plugin,
+    call it's subclass, plugin_ptr.
+
+Q2.
+    What is plugin_service?
+
+A2.
+    The class plugin_service is the parent class of all http request handler.
+
+
+Q3.
+    What is plugin_server?
+
+A3.
+    the plugin_server is a http server that facilitate the 
+    creation/loading/other mangement actions of http request handler.
+
+    
+Q4. 
+    How to create my own plugin server?
+
+A4.
+    Similar to 'How to create my own http server?'. See '02.http_server.txt'.
+    
+Q5. 
+    what is plugin_ptr?
+    
+A5.
+    a subclass/concrete class of plugin. manages the loading/unloading of shared objects, 
+    and creating/destroying plugin service instances.
+    
+    responsible for the lifecycle of shared objects, .so or .dll.
+
+Q6.
+    what is plugin_instance_ptr?
+    
+A6.
+    this class is not used.
+    sounds like a smart pointer class to manage the lifecycle of instances of plugin_ptr.
+    
+Q7.
+    What is static_entry_point_helper?
+
+A7. static_entry_point_helper is used to staticly link pion plugins with pion
+    plugin server. 
+    define macro PION_STATIC_LINKING to open the switch, and PION_DECLARE_PLUGIN
+    is used for all plugin service, one line for each plugin service.
+    PION_DECLARE_PLUGIN(EchoService)
+    PION_DECLARE_PLUGIN(FileService)
+    ...
+    if plugin services is not declared, switching on static linking will not
+    staticly compiled/linked.
+

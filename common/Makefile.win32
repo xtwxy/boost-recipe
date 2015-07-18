@@ -1,0 +1,49 @@
+OBJECTS = $(subst .cpp,.o,$(SOURCES))
+
+INCLUDE += -IC:\Boost\include\boost-1_57 -I/usr/include
+LIB += -LC:\Boost\lib -lboost_system-mgw45-mt-1_57.dll -lws2_32 -lmswsock -lgmon -static
+
+
+CXX_FLAGS += -pg -O3 -D_WIN32_WINNT=0x0501 -Werror 
+    #-DBOOST_ASIO_ENABLE_HANDLER_TRACKING 
+    #-std=c++0x -fvisibility=hidden -fPIC 
+
+GCC_PREFIX=#mipsel-sf436-linux-gnu-
+CC=$(GCC_PREFIX)gcc
+CXX=$(GCC_PREFIX)g++
+AR=$(GCC_PREFIX)ar
+AS=$(GCC_PREFIX)as
+LD=$(GCC_PREFIX)ld
+NM=$(GCC_PREFIX)nm
+RANLIB=$(GCC_PREFIX)ranlib
+STRIP=$(GCC_PREFIX)strip
+OBJCOPY=$(GCC_PREFIX)objcopy
+OBJDUMP=$(GCC_PREFIX)objdump
+READELF=$(GCC_PREFIX)readelf
+
+
+all: $(TARGET)
+
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXX_FLAGS) -o $@ $^ $(LIB)
+#	$(STRIP) $@
+
+$(OBJECTS): %.o: %.cpp
+	 $(CXX) -c $(CXX_FLAGS) $^ -o $@ $(INCLUDE)
+
+# prepare build dir & clean
+init:
+ifneq (build, $(wildcard build))
+		mkdir -p build
+endif
+
+clean:
+ifeq ($(TARGET), $(wildcard $(TARGET)))
+	rm -f $(TARGET)
+	rm -f $(OBJECTS)
+endif
+ifeq (build, $(wildcard build))
+	rm -rf build
+endif
+

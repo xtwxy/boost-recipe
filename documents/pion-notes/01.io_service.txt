@@ -1,0 +1,54 @@
+Q1.
+    Where is the io_service?
+A1.
+    io_service is defined in scheduler.hpp, in 2 cases:
+    1.
+        a single io_service to multiple threads, defined in class single_service_scheduler.
+        get io_service by calling get_io_service(void).
+    2.
+        each thread has it's own io_service, defined in class one_to_one_scheduler.
+        get io_service by calling get_io_service(void), or get_io_service(boost::uint32_t n)
+        to get direct access to the io_service instance to aviod locking.
+
+Q2.
+    Who is using io_service?
+A2.
+    1. ./include/pion/tcp/stream.hpp
+    2. ./include/pion/tcp/stream.hpp
+    3. ./include/pion/tcp/connection.hpp
+    4. ./include/pion/scheduler.hpp
+    5. ./include/pion/tcp/server.hpp
+        
+Q3.
+    How to change thread count?
+A3.
+    Default number of threads is defined as a static member of class scheduler,
+    DEFAULT_NUM_THREADS = 8. the number threads also can be modified by 
+    set_num_threads(const boost::uint32_t n) member function.
+
+Q4.
+    Who is using scheduler?
+A4.
+    1. ./include/pion/tcp/server.hpp
+    2. ./include/pion/scheduler.hpp
+    3. ./include/pion/http/plugin_server.hpp
+    4. ./include/pion/http/server.hpp
+    scheduler is a member of tcp server but is not used (except start()/stop(),
+    which calls scheduler::add_active_user(void)/scheduler::remove_active_user(void),
+    which calls scheduler::start()/scheduler::stop().).
+    
+Q5.
+    How to avoid premature stopping of io_service/exiting of threads?
+A5.
+    scheduler::keep_running() is responsible for keep the scheduler running.
+    scheduler::KEEP_RUNNING_TIMER_SECONDS = 5, which defines the period of call.
+    if not requests, scheduler::keep_running() keeps the io_service from stopping.
+    
+
+Q6. 
+    How to create my own http server?
+A6.
+    1. create http server 
+Q. How to create my own plugin server?
+
+

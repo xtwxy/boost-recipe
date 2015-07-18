@@ -1,0 +1,7 @@
+ifeq ($(OS),Windows_NT)
+  DLL = .dll
+  EXE = .exe
+else
+  DLL = .so
+  EXE = 
+endif
