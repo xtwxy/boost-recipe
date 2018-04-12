@@ -2,22 +2,22 @@ Q1.
     How to create my own http server?
 A1.
     There are many ways to create an http server.
-    1. create http server using port number.
+    1. create http server with port number.
 
     1a. call explicit server(const unsigned int tcp_port = 0)
     1b. default scheduler, a single service scheduler will be used - single io_service and multiple threads. 
 
-    2. create http server using http endpoint.
+    2. create http server with http endpoint.
 
     2a. call explicit server(const boost::asio::ip::tcp::endpoint& endpoint)
     2b. default scheduler, a single service scheduler will be used - single io_service and multiple threads. 
     
-    3. create http server using scheduler and port number.
+    3. create http server with scheduler and port number.
 
     3a. call explicit server(scheduler& sched, const unsigned int tcp_port = 0)
     3b. user specified scheduler will be used. 
 
-    4. create http server using scheduler and http endpoint.
+    4. create http server with scheduler and http endpoint.
 
     4a. call server(scheduler& sched, const boost::asio::ip::tcp::endpoint& endpoint)
     4b. user specified scheduler will be used. 
